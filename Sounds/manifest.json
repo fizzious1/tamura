@@ -1,0 +1,144 @@
+{
+  "sounds": [
+    {
+      "id": "drum_common_001",
+      "name": "Clean Kick",
+      "category": "Drums",
+      "tier": "Common",
+      "file": "Drums/Common/clean_kick.wav"
+    },
+    {
+      "id": "drum_common_002",
+      "name": "Basic Snare",
+      "category": "Drums",
+      "tier": "Common",
+      "file": "Drums/Common/basic_snare.wav"
+    },
+    {
+      "id": "drum_common_003",
+      "name": "Closed Hat",
+      "category": "Drums",
+      "tier": "Common",
+      "file": "Drums/Common/closed_hat.wav"
+    },
+    {
+      "id": "drum_common_004",
+      "name": "Simple Clap",
+      "category": "Drums",
+      "tier": "Common",
+      "file": "Drums/Common/simple_clap.wav"
+    },
+    {
+      "id": "drum_common_005",
+      "name": "Room Kick",
+      "category": "Drums",
+      "tier": "Common",
+      "file": "Drums/Common/room_kick.wav"
+    },
+    {
+      "id": "drum_uncommon_001",
+      "name": "Vinyl Snare",
+      "category": "Drums",
+      "tier": "Uncommon",
+      "file": "Drums/Uncommon/vinyl_snare.wav"
+    },
+    {
+      "id": "drum_uncommon_002",
+      "name": "Warm Kick",
+      "category": "Drums",
+      "tier": "Uncommon",
+      "file": "Drums/Uncommon/warm_kick.wav"
+    },
+    {
+      "id": "drum_uncommon_003",
+      "name": "Shuffled Hat",
+      "category": "Drums",
+      "tier": "Uncommon",
+      "file": "Drums/Uncommon/shuffled_hat.wav"
+    },
+    {
+      "id": "drum_rare_001",
+      "name": "Tape Crunch Snare",
+      "category": "Drums",
+      "tier": "Rare",
+      "file": "Drums/Rare/tape_crunch_snare.wav"
+    },
+    {
+      "id": "drum_rare_002",
+      "name": "808 Sub Kick",
+      "category": "Drums",
+      "tier": "Rare",
+      "file": "Drums/Rare/808_sub_kick.wav"
+    },
+    {
+      "id": "drum_epic_001",
+      "name": "Analog Smack",
+      "category": "Drums",
+      "tier": "Epic",
+      "file": "Drums/Epic/analog_smack.wav"
+    },
+    {
+      "id": "drum_legendary_001",
+      "name": "The One Kick",
+      "category": "Drums",
+      "tier": "Legendary",
+      "file": "Drums/Legendary/the_one_kick.wav"
+    },
+    {
+      "id": "fx_common_001",
+      "name": "White Noise Riser",
+      "category": "FX",
+      "tier": "Common",
+      "file": "FX/Common/white_noise_riser.wav"
+    },
+    {
+      "id": "fx_common_002",
+      "name": "Simple Impact",
+      "category": "FX",
+      "tier": "Common",
+      "file": "FX/Common/simple_impact.wav"
+    },
+    {
+      "id": "fx_common_003",
+      "name": "Basic Sweep",
+      "category": "FX",
+      "tier": "Common",
+      "file": "FX/Common/basic_sweep.wav"
+    },
+    {
+      "id": "fx_uncommon_001",
+      "name": "Glitch Stutter",
+      "category": "FX",
+      "tier": "Uncommon",
+      "file": "FX/Uncommon/glitch_stutter.wav"
+    },
+    {
+      "id": "fx_uncommon_002",
+      "name": "Tape Stop",
+      "category": "FX",
+      "tier": "Uncommon",
+      "file": "FX/Uncommon/tape_stop.wav"
+    },
+    {
+      "id": "fx_rare_001",
+      "name": "Granular Texture",
+      "category": "FX",
+      "tier": "Rare",
+      "file": "FX/Rare/granular_texture.wav"
+    },
+    {
+      "id": "fx_epic_001",
+      "name": "Cinematic Boom",
+      "category": "FX",
+      "tier": "Epic",
+      "file": "FX/Epic/cinematic_boom.wav"
+    },
+    {
+      "id": "fx_legendary_001",
+      "name": "The Void",
+      "category": "FX",
+      "tier": "Legendary",
+      "file": "FX/Legendary/the_void.wav"
+    }
+  ]
+}
