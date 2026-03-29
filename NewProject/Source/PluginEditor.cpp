@@ -48,12 +48,24 @@ TamuraAudioProcessorEditor::TamuraAudioProcessorEditor (TamuraAudioProcessor& p)
             tamuraProcessor.previewSound (pendingOutcome->awardedSound->id);
     };
     controlPanel.onStop = [this] { tamuraProcessor.stopPreview(); };
-    controlPanel.onSave = [] {}; // TODO: implement save-to-disk
-    controlPanel.onLibrary = [] {}; // TODO: implement library browser
+    controlPanel.onSave = [this] { saveLastSoundToDisk(); };
+    controlPanel.onLibrary = [this] { toggleSoundBrowser(); };
     addAndMakeVisible (controlPanel);
 
     // --- Waveform display ---
     addAndMakeVisible (waveformDisplay);
+
+    // --- Sound browser (initially hidden) ---
+    soundBrowser.onPreview = [this] (const juce::String& soundId)
+    {
+        tamuraProcessor.previewSound (soundId);
+    };
+    soundBrowser.onSelect = [this] (const juce::String& soundId)
+    {
+        tamuraProcessor.previewSound (soundId);
+    };
+    soundBrowser.setVisible (false);
+    addAndMakeVisible (soundBrowser);
 
     // --- Status bar ---
     statusLabel.setNeonColour (juce::Colour (0xFF4169E1));
@@ -64,6 +76,14 @@ TamuraAudioProcessorEditor::TamuraAudioProcessorEditor (TamuraAudioProcessor& p)
     // Initial state
     updateTokenDisplay();
     updateStatusBar();
+
+    // Check for daily token grant
+    auto tokensGranted = tamuraProcessor.getTokenManager().claimDailyTokens();
+    if (tokensGranted > 0)
+    {
+        tamuraProcessor.getTokenManager().saveState();
+        showDailyGrantNotification (tokensGranted);
+    }
 
     setSize (520, 740);
 }
@@ -140,6 +160,9 @@ void TamuraAudioProcessorEditor::resized()
     // Waveform display
     waveformDisplay.setBounds (30, 520, bounds.getWidth() - 60, 150);
 
+    // Sound browser — overlays the waveform area when visible
+    soundBrowser.setBounds (30, 520, bounds.getWidth() - 60, 150);
+
     // Status bar
     statusLabel.setBounds (30, bounds.getHeight() - 30, bounds.getWidth() - 60, 25);
 }
@@ -205,9 +228,17 @@ void TamuraAudioProcessorEditor::onAllReelsStopped()
     resultLabel.setText (tierStr + "!");
 
     if (pendingOutcome->awardedSound != nullptr)
+    {
         soundNameLabel.setText (pendingOutcome->awardedSound->name);
+        tamuraProcessor.previewSound (pendingOutcome->awardedSound->id);
+    }
     else
+    {
         soundNameLabel.setText ("ALL UNLOCKED");
+    }
+
+    // Update waveform display with the loaded audio
+    updateWaveformDisplay();
 }
 
 void TamuraAudioProcessorEditor::updateTokenDisplay()
@@ -221,4 +252,70 @@ void TamuraAudioProcessorEditor::updateStatusBar()
     auto unlocked = tamuraProcessor.getSoundLibrary().getUnlockedCount();
     auto total = tamuraProcessor.getSoundLibrary().getTotalSoundCount();
     statusLabel.setText ("SOUNDS " + juce::String (unlocked) + "/" + juce::String (total));
+}
+
+void TamuraAudioProcessorEditor::updateWaveformDisplay()
+{
+    auto* buffer = tamuraProcessor.getSamplePlayer().getAudioBuffer();
+    waveformDisplay.setAudioBuffer (buffer);
+
+    if (buffer != nullptr)
+    {
+        auto displayWidth = waveformDisplay.getWidth();
+        if (displayWidth > 0)
+        {
+            int spp = buffer->getNumSamples() / displayWidth;
+            waveformDisplay.setSamplesPerPixel (juce::jmax (1, spp));
+        }
+    }
+}
+
+void TamuraAudioProcessorEditor::saveLastSoundToDisk()
+{
+    if (! pendingOutcome.has_value() || pendingOutcome->awardedSound == nullptr)
+        return;
+
+    auto& sound = *pendingOutcome->awardedSound;
+    auto sourceFile = tamuraProcessor.getSoundLibrary().getSoundFile (sound);
+    if (! sourceFile.existsAsFile())
+        return;
+
+    auto defaultName = sound.name.replaceCharacters (" ", "_") + ".wav";
+
+    fileChooser = std::make_unique<juce::FileChooser> (
+        "Save Sound", juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile (defaultName),
+        "*.wav");
+
+    fileChooser->launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
+        [sourceFile] (const juce::FileChooser& chooser)
+        {
+            auto dest = chooser.getResult();
+            if (dest != juce::File())
+                sourceFile.copyFileTo (dest);
+        });
+}
+
+void TamuraAudioProcessorEditor::showDailyGrantNotification (int tokensGranted)
+{
+    resultLabel.setNeonColour (juce::Colour (0xFFFFD700));
+    resultLabel.setText ("DAILY BONUS!");
+    soundNameLabel.setText ("+" + juce::String (tokensGranted) + " tokens");
+    updateTokenDisplay();
+}
+
+void TamuraAudioProcessorEditor::toggleSoundBrowser()
+{
+    soundBrowserVisible = ! soundBrowserVisible;
+
+    if (soundBrowserVisible)
+        refreshSoundBrowser();
+
+    soundBrowser.setVisible (soundBrowserVisible);
+    waveformDisplay.setVisible (! soundBrowserVisible);
+}
+
+void TamuraAudioProcessorEditor::refreshSoundBrowser()
+{
+    auto unlocked = tamuraProcessor.getSoundLibrary().getUnlockedSounds();
+    soundBrowser.setSounds (unlocked);
 }

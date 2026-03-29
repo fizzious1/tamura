@@ -35,6 +35,12 @@ void SamplePlayer::loadFile (const juce::String& path)
     if (reader == nullptr)
         return;
 
+    // Store a copy of the audio data for waveform display
+    loadedBuffer.setSize (static_cast<int> (reader->numChannels),
+                          static_cast<int> (reader->lengthInSamples));
+    reader->read (&loadedBuffer, 0, static_cast<int> (reader->lengthInSamples), 0, true, true);
+    loadedFilePath = path;
+
     auto newSource = std::make_unique<juce::AudioFormatReaderSource> (reader, true);
     transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);
     readerSource = std::move (newSource);
@@ -72,6 +78,18 @@ bool SamplePlayer::isPlaying() const
 void SamplePlayer::changeListenerCallback (juce::ChangeBroadcaster*)
 {
     // Transport state changed — could notify UI in the future
+}
+
+const juce::AudioBuffer<float>* SamplePlayer::getAudioBuffer() const
+{
+    if (loadedBuffer.getNumSamples() > 0)
+        return &loadedBuffer;
+    return nullptr;
+}
+
+juce::String SamplePlayer::getLoadedFilePath() const
+{
+    return loadedFilePath;
 }
 
 } // namespace tamura

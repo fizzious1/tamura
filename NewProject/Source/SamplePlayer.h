@@ -32,12 +32,21 @@ public:
     void stop();
     bool isPlaying() const;
 
+    // Get the currently loaded audio buffer (for waveform display).
+    // Returns nullptr if no file is loaded.
+    const juce::AudioBuffer<float>* getAudioBuffer() const;
+
+    // Get the file path of the currently loaded sound
+    juce::String getLoadedFilePath() const;
+
 private:
     void changeListenerCallback (juce::ChangeBroadcaster* source) override;
 
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
+    juce::AudioBuffer<float> loadedBuffer;
+    juce::String loadedFilePath;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamplePlayer)
 };

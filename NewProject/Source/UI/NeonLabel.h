@@ -11,6 +11,9 @@
  *
  * Default neon colour is purple (#9370DB).
  */
+namespace tamura
+{
+
 class NeonLabel : public juce::Component
 {
 public:
@@ -61,3 +64,5 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NeonLabel)
 };
+
+} // namespace tamura

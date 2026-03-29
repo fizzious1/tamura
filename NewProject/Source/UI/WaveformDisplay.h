@@ -15,6 +15,9 @@
  *   Waveform    #00BFFF  (electric blue, with glow)
  *   Bezel       gradient  #606068 -> #909098
  */
+namespace tamura
+{
+
 class WaveformDisplay : public juce::Component
 {
 public:
@@ -65,3 +68,5 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformDisplay)
 };
+
+} // namespace tamura

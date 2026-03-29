@@ -1,6 +1,9 @@
 #include "NeonLabel.h"
 #include <cmath>
 
+namespace tamura
+{
+
 // ═════════════════════════════════════════════════════════════════════════════
 //  Construction
 // ═════════════════════════════════════════════════════════════════════════════
@@ -120,3 +123,5 @@ void NeonLabel::drawTextLayer (juce::Graphics& g, float offsetX, float offsetY,
     g.setFont (juce::FontOptions (fontSize).withStyle ("Bold"));
     g.drawText (displayText.toUpperCase(), area, justification, true);
 }
+
+} // namespace tamura
