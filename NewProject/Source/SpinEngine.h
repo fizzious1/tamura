@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_core/juce_core.h>
+#include <juce_graphics/juce_graphics.h>
 #include <array>
 
 namespace tamura
@@ -52,6 +53,36 @@ inline juce::String symbolToString (ReelSymbol symbol)
         default:                  return "?";
     }
 }
+
+inline juce::String getSymbolDisplayText (ReelSymbol symbol)
+{
+    switch (symbol)
+    {
+        case ReelSymbol::Cherry:  return juce::CharPointer_UTF8 ("\xf0\x9f\x8d\x92");
+        case ReelSymbol::Lemon:   return juce::CharPointer_UTF8 ("\xf0\x9f\x8d\x8b");
+        case ReelSymbol::Bar:     return "BAR";
+        case ReelSymbol::Bell:    return juce::CharPointer_UTF8 ("\xf0\x9f\x94\x94");
+        case ReelSymbol::Seven:   return "7";
+        case ReelSymbol::Diamond: return juce::CharPointer_UTF8 ("\xf0\x9f\x92\x8e");
+        default:                  return "?";
+    }
+}
+
+inline juce::Colour getSymbolColour (ReelSymbol symbol)
+{
+    switch (symbol)
+    {
+        case ReelSymbol::Cherry:  return juce::Colour (0xFFFF6B6B);
+        case ReelSymbol::Lemon:   return juce::Colour (0xFFFFE066);
+        case ReelSymbol::Bar:     return juce::Colour (0xFFF0E6D2);
+        case ReelSymbol::Bell:    return juce::Colour (0xFFFFD700);
+        case ReelSymbol::Seven:   return juce::Colour (0xFF7B68EE);
+        case ReelSymbol::Diamond: return juce::Colour (0xFF69D2E7);
+        default:                  return juce::Colour (0xFFF0E6D2);
+    }
+}
+
+static constexpr int ReelSymbolCount = 6;
 
 struct SpinResult
 {
