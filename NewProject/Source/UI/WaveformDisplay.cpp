@@ -1,5 +1,8 @@
 #include "WaveformDisplay.h"
 
+namespace tamura
+{
+
 // ═════════════════════════════════════════════════════════════════════════════
 //  Construction
 // ═════════════════════════════════════════════════════════════════════════════
@@ -309,3 +312,5 @@ void WaveformDisplay::paintScanlines (juce::Graphics& g, juce::Rectangle<float> 
         g.drawHorizontalLine (y, area.getX(), area.getRight());
     }
 }
+
+} // namespace tamura

@@ -9,6 +9,7 @@
 #include "UI/ControlPanel.h"
 #include "UI/WaveformDisplay.h"
 #include "UI/NeonLabel.h"
+#include "UI/SoundBrowser.h"
 
 class TamuraAudioProcessorEditor : public juce::AudioProcessorEditor
 {
@@ -24,12 +25,17 @@ private:
     void onAllReelsStopped();
     void updateTokenDisplay();
     void updateStatusBar();
+    void updateWaveformDisplay();
+    void saveLastSoundToDisk();
+    void showDailyGrantNotification (int tokensGranted);
+    void toggleSoundBrowser();
+    void refreshSoundBrowser();
 
     TamuraAudioProcessor& tamuraProcessor;
     tamura::TamuraLookAndFeel tamuraLookAndFeel;
 
     // Title
-    NeonLabel titleLabel;
+    tamura::NeonLabel titleLabel;
 
     // 3 reel gauges
     tamura::SlotReelComponent reel1;
@@ -40,20 +46,27 @@ private:
     tamura::SpinButton spinBtn;
 
     // Result display
-    NeonLabel resultLabel;
-    NeonLabel soundNameLabel;
+    tamura::NeonLabel resultLabel;
+    tamura::NeonLabel soundNameLabel;
 
     // Token display
-    NeonLabel tokenLabel;
+    tamura::NeonLabel tokenLabel;
 
     // Control panel (Preview, Stop, Save, Library)
     tamura::ControlPanel controlPanel;
 
     // Waveform display
-    WaveformDisplay waveformDisplay;
+    tamura::WaveformDisplay waveformDisplay;
+
+    // Sound browser (toggled by Library button)
+    tamura::SoundBrowser soundBrowser;
+    bool soundBrowserVisible = false;
 
     // Status bar
-    NeonLabel statusLabel;
+    tamura::NeonLabel statusLabel;
+
+    // File chooser (must be a member — JUCE async choosers must outlive the callback)
+    std::unique_ptr<juce::FileChooser> fileChooser;
 
     // Spin state
     bool isSpinning = false;

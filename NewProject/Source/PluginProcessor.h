@@ -64,6 +64,7 @@ public:
     tamura::TokenManager& getTokenManager()   { return tokenManager; }
     tamura::SoundLibrary& getSoundLibrary()   { return soundLibrary; }
     tamura::SpinEngine&   getSpinEngine()     { return spinEngine; }
+    tamura::SamplePlayer& getSamplePlayer()   { return samplePlayer; }
 
     // Last spin result (for UI to read after a spin)
     std::optional<SpinOutcome> getLastSpinOutcome() const { return lastSpinOutcome; }

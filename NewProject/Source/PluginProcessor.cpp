@@ -124,16 +124,6 @@ std::optional<TamuraAudioProcessor::SpinOutcome> TamuraAudioProcessor::performSp
     SpinOutcome outcome { spinResult, awardedSound };
     lastSpinOutcome = outcome;
 
-    if (awardedSound != nullptr)
-    {
-        auto soundFile = soundLibrary.getSoundFile (*awardedSound);
-        if (soundFile.existsAsFile())
-        {
-            samplePlayer.loadFile (soundFile.getFullPathName());
-            samplePlayer.play();
-        }
-    }
-
     tokenManager.saveState();
     return outcome;
 }
