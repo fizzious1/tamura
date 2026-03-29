@@ -45,6 +45,8 @@ private:
 
     void paintBezel         (juce::Graphics& g);
     void paintLEDs          (juce::Graphics& g, juce::Rectangle<float> bezelRect);
+    void paintDecorativeKnobs (juce::Graphics& g, juce::Rectangle<float> bezelRect);
+    void paintBezelLabels   (juce::Graphics& g, juce::Rectangle<float> bezelRect);
     void paintBackground    (juce::Graphics& g, juce::Rectangle<float> area);
     void paintGrid          (juce::Graphics& g, juce::Rectangle<float> area);
     void paintWaveform      (juce::Graphics& g, juce::Rectangle<float> area);

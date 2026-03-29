@@ -6,7 +6,6 @@ namespace tamura
 TokenManager::TokenManager()
 {
     loadState();
-    claimDailyTokens();
 }
 
 int TokenManager::getBalance() const
@@ -25,7 +24,6 @@ bool TokenManager::spendToken()
         return false;
 
     tokenBalance -= TokensPerSpin;
-    saveState();
     return true;
 }
 

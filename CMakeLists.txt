@@ -52,6 +52,8 @@ target_sources(Tamura
         NewProject/Source/UI/WaveformDisplay.cpp
         NewProject/Source/UI/NeonLabel.cpp
         NewProject/Source/UI/SoundBrowser.cpp
+        NewProject/Source/UI/ReelStripWindow.cpp
+        NewProject/Source/UI/SideLever.cpp
 )
 
 target_include_directories(Tamura

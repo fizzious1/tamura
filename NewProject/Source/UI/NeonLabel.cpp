@@ -60,6 +60,21 @@ void NeonLabel::setJustification (juce::Justification j)
     }
 }
 
+void NeonLabel::setDrawFrame (bool shouldDraw)
+{
+    if (drawFrame != shouldDraw)
+    {
+        drawFrame = shouldDraw;
+        repaint();
+    }
+}
+
+void NeonLabel::setFramePadding (float padding)
+{
+    framePadding = juce::jmax (0.0f, padding);
+    repaint();
+}
+
 // ═════════════════════════════════════════════════════════════════════════════
 //  Painting
 // ═════════════════════════════════════════════════════════════════════════════
@@ -112,6 +127,32 @@ void NeonLabel::paint (juce::Graphics& g)
     // ── White-hot highlight down the centre ─────────────────────────────
     // Slightly transparent white gives the "hot filament" look
     drawTextLayer (g, 0.0f, 0.0f, juce::Colours::white.withAlpha (0.45f));
+
+    // ── Neon rectangular frame ────────────────────────────────────────
+    if (drawFrame)
+    {
+        auto frameRect = getLocalBounds().toFloat().reduced (framePadding);
+
+        // Glow passes (same multi-layer technique as text glow)
+        struct FrameGlow { float expand; float alpha; };
+        static constexpr FrameGlow frameGlows[] = {
+            { 6.0f, 0.04f }, { 4.0f, 0.07f }, { 2.5f, 0.12f }, { 1.2f, 0.22f }
+        };
+
+        for (const auto& fg : frameGlows)
+        {
+            g.setColour (neonColour.withAlpha (fg.alpha));
+            g.drawRoundedRectangle (frameRect.expanded (fg.expand), 3.0f, 2.0f);
+        }
+
+        // Bright core border
+        g.setColour (neonColour.brighter (0.3f));
+        g.drawRoundedRectangle (frameRect, 3.0f, 2.0f);
+
+        // White-hot highlight
+        g.setColour (juce::Colours::white.withAlpha (0.3f));
+        g.drawRoundedRectangle (frameRect, 3.0f, 1.0f);
+    }
 }
 
 void NeonLabel::drawTextLayer (juce::Graphics& g, float offsetX, float offsetY,

@@ -10,8 +10,11 @@
 #include "UI/WaveformDisplay.h"
 #include "UI/NeonLabel.h"
 #include "UI/SoundBrowser.h"
+#include "UI/ReelStripWindow.h"
+#include "UI/SideLever.h"
 
-class TamuraAudioProcessorEditor : public juce::AudioProcessorEditor
+class TamuraAudioProcessorEditor : public juce::AudioProcessorEditor,
+                                    private juce::Timer
 {
 public:
     TamuraAudioProcessorEditor (TamuraAudioProcessor&);
@@ -21,6 +24,8 @@ public:
     void resized() override;
 
 private:
+    void timerCallback() override;
+
     void performSpin();
     void onAllReelsStopped();
     void updateTokenDisplay();
@@ -41,6 +46,12 @@ private:
     tamura::SlotReelComponent reel1;
     tamura::SlotReelComponent reel2;
     tamura::SlotReelComponent reel3;
+
+    // Reel strip window (traditional slot strip below gauges)
+    tamura::ReelStripWindow reelStrip;
+
+    // Side lever
+    tamura::SideLever sideLever;
 
     // Spin button
     tamura::SpinButton spinBtn;
@@ -72,6 +83,10 @@ private:
     bool isSpinning = false;
     int reelsStoppedCount = 0;
     std::optional<TamuraAudioProcessor::SpinOutcome> pendingOutcome;
+
+    // Siren animation
+    float sirenPulsePhase = 0.0f;
+    bool sirenActive = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TamuraAudioProcessorEditor)
 };

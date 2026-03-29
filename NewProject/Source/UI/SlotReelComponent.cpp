@@ -27,8 +27,23 @@ void SlotReelComponent::startSpinning()
 
 void SlotReelComponent::stopSpinning (ReelSymbol finalSymbol, int delayMs)
 {
-    targetSymbol   = finalSymbol;
-    delayRemaining = juce::jmax (0, delayMs);
+    targetSymbol = finalSymbol;
+
+    if (delayMs <= 0)
+    {
+        // Immediate stop — snap to the target symbol now
+        currentSymbol = finalSymbol;
+        spinning      = false;
+        decelerating  = false;
+        stopTimer();
+        repaint();
+
+        if (onSpinComplete)
+            onSpinComplete();
+        return;
+    }
+
+    delayRemaining = delayMs;
 
     // We will begin deceleration after delayRemaining has elapsed.
     // The actual deceleration uses 8 steps of increasing interval.
@@ -246,36 +261,6 @@ void SlotReelComponent::resized()
 ReelSymbol SlotReelComponent::randomSymbol()
 {
     return static_cast<ReelSymbol> (rng.nextInt (6));
-}
-
-juce::String SlotReelComponent::getSymbolDisplayText (ReelSymbol symbol)
-{
-    // Use distinctive Unicode glyphs where possible for a slot-machine feel.
-    // Falls back to short ASCII text on systems without the glyphs.
-    switch (symbol)
-    {
-        case ReelSymbol::Cherry:    return juce::CharPointer_UTF8 ("\xf0\x9f\x8d\x92");   // U+1F352 cherry emoji
-        case ReelSymbol::Lemon:     return juce::CharPointer_UTF8 ("\xf0\x9f\x8d\x8b");   // U+1F34B lemon emoji
-        case ReelSymbol::Bar:       return "BAR";
-        case ReelSymbol::Bell:      return juce::CharPointer_UTF8 ("\xf0\x9f\x94\x94");   // U+1F514 bell emoji
-        case ReelSymbol::Seven:     return "7";
-        case ReelSymbol::Diamond:   return juce::CharPointer_UTF8 ("\xf0\x9f\x92\x8e");   // U+1F48E gem stone
-        default:                    return "?";
-    }
-}
-
-juce::Colour SlotReelComponent::getSymbolColour (ReelSymbol symbol)
-{
-    switch (symbol)
-    {
-        case ReelSymbol::Cherry:    return juce::Colour (0xFFFF6B6B);  // warm red
-        case ReelSymbol::Lemon:     return juce::Colour (0xFFFFE066);  // bright yellow
-        case ReelSymbol::Bar:       return juce::Colour (Palette::textCream);
-        case ReelSymbol::Bell:      return juce::Colour (0xFFFFD700);  // gold
-        case ReelSymbol::Seven:     return juce::Colour (Palette::neonPurple);
-        case ReelSymbol::Diamond:   return juce::Colour (0xFF69D2E7);  // ice blue
-        default:                    return juce::Colour (Palette::textCream);
-    }
 }
 
 } // namespace tamura

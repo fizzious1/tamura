@@ -44,6 +44,12 @@ public:
     /** Set the text justification (default: centred). */
     void setJustification (juce::Justification j);
 
+    /** Enable/disable a neon rectangular frame border around the text. */
+    void setDrawFrame (bool shouldDraw);
+
+    /** Set padding between text and frame edge (default: 8). */
+    void setFramePadding (float padding);
+
     // ── Component overrides ─────────────────────────────────────────────
 
     void paint (juce::Graphics& g) override;
@@ -61,6 +67,8 @@ private:
     juce::Colour        neonColour   { 0xFF9370DB };   // medium purple
     float               fontSize     { 22.0f };
     juce::Justification justification { juce::Justification::centred };
+    bool                drawFrame    { false };
+    float               framePadding { 8.0f };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NeonLabel)
 };

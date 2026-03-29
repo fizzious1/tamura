@@ -97,6 +97,10 @@ void WaveformDisplay::paintBezel (juce::Graphics& g)
 
     // Decorative LEDs on the left side of the bezel
     paintLEDs (g, bounds);
+
+    // Decorative knobs and labels
+    paintDecorativeKnobs (g, bounds);
+    paintBezelLabels (g, bounds);
 }
 
 void WaveformDisplay::paintLEDs (juce::Graphics& g, juce::Rectangle<float> bezelRect)
@@ -296,6 +300,82 @@ void WaveformDisplay::paintIdleLine (juce::Graphics& g, juce::Rectangle<float> a
     // Main line
     g.setColour (waveCol.withAlpha (0.5f));
     g.strokePath (noisePath, juce::PathStrokeType (1.0f));
+}
+
+void WaveformDisplay::paintDecorativeKnobs (juce::Graphics& g, juce::Rectangle<float> bezelRect)
+{
+    // Two small decorative chrome knobs at bottom-left and bottom-right of the bezel
+    auto drawKnob = [&] (float cx, float cy, float radius)
+    {
+        // Outer ring
+        g.setColour (juce::Colour (colBezelLight));
+        g.fillEllipse (cx - radius, cy - radius, radius * 2.0f, radius * 2.0f);
+
+        // Inner face (dark)
+        float inner = radius * 0.7f;
+        juce::ColourGradient knobGrad (juce::Colour (0xFF5A5A64), cx, cy - inner,
+                                        juce::Colour (0xFF28282E), cx, cy + inner, false);
+        g.setGradientFill (knobGrad);
+        g.fillEllipse (cx - inner, cy - inner, inner * 2.0f, inner * 2.0f);
+
+        // Indicator line
+        g.setColour (juce::Colour (colWaveform).withAlpha (0.6f));
+        g.drawLine (cx, cy - inner * 0.8f, cx, cy - inner * 0.3f, 1.5f);
+
+        // Specular dot
+        g.setColour (juce::Colours::white.withAlpha (0.25f));
+        g.fillEllipse (cx - 1.0f, cy - inner * 0.5f, 2.0f, 2.0f);
+    };
+
+    float knobY = bezelRect.getBottom() - bezelThickness * 0.5f;
+    drawKnob (bezelRect.getX() + 30.0f, knobY, 5.0f);
+    drawKnob (bezelRect.getRight() - 30.0f, knobY, 5.0f);
+
+    // Right-side LEDs (mirror of left-side)
+    const float ledRadius  = 2.0f;
+    const float ledCentreX = bezelRect.getRight() - bezelThickness * 0.5f;
+    const float spacing    = 10.0f;
+    const float startY     = bezelRect.getCentreY() - spacing;
+
+    const juce::Colour ledColours[] = {
+        juce::Colour (0xFF00FF80),
+        juce::Colour (0xFFFFCC00),
+        juce::Colour (0xFFFF3040)
+    };
+
+    for (int i = 0; i < 3; ++i)
+    {
+        float cy = startY + static_cast<float> (i) * spacing;
+
+        g.setColour (ledColours[i].withAlpha (0.25f));
+        g.fillEllipse (ledCentreX - ledRadius * 2.0f, cy - ledRadius * 2.0f,
+                        ledRadius * 4.0f, ledRadius * 4.0f);
+
+        g.setColour (ledColours[i]);
+        g.fillEllipse (ledCentreX - ledRadius, cy - ledRadius,
+                        ledRadius * 2.0f, ledRadius * 2.0f);
+
+        g.setColour (ledColours[i].brighter (0.6f).withAlpha (0.8f));
+        g.fillEllipse (ledCentreX - ledRadius * 0.5f, cy - ledRadius * 0.7f,
+                        ledRadius, ledRadius);
+    }
+}
+
+void WaveformDisplay::paintBezelLabels (juce::Graphics& g, juce::Rectangle<float> bezelRect)
+{
+    auto font = juce::Font (juce::FontOptions().withHeight (8.0f));
+    g.setFont (font);
+    g.setColour (juce::Colour (0xFF9E9E8E));
+
+    // "TIME" label at bottom-left
+    g.drawText ("TIME", juce::Rectangle<float> (bezelRect.getX() + 42.0f,
+        bezelRect.getBottom() - bezelThickness - 1.0f, 30.0f, bezelThickness),
+        juce::Justification::centredLeft, false);
+
+    // "FREQ" label at bottom-right
+    g.drawText ("FREQ", juce::Rectangle<float> (bezelRect.getRight() - 72.0f,
+        bezelRect.getBottom() - bezelThickness - 1.0f, 30.0f, bezelThickness),
+        juce::Justification::centredRight, false);
 }
 
 void WaveformDisplay::paintScanlines (juce::Graphics& g, juce::Rectangle<float> area)
